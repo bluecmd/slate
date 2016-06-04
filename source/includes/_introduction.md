@@ -1,4 +1,4 @@
-# Introduction
+## Introduction
 
 Welcome to the Tink API reference! This document explains how to work with our API and describes the data that you can access with it.
 

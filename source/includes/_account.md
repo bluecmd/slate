@@ -1,4 +1,4 @@
-# Account
+## Account
   
 When a <code>credentials</code> connection is successfully established, all supported accounts from the financial institution are aggregated and made available in the Tink API. An <code>account</code> can represent everything from the user's regular checking account to an investment account with their broker, or their home mortgage as a credit acccount.
 

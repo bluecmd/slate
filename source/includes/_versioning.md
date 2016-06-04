@@ -1,4 +1,4 @@
-# Versioning
+## Versioning
 
 The Tink API is versioned using a version identifier in the endpoint URI. The current version of the API is v1 and we expect this to be the case for the forseable future. New properties and data models are continuously added to the v1 API, but it will remain backwards compatible with this specification until deprecated.
 

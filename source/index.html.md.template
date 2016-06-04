@@ -5,6 +5,7 @@ language_tabs:
   - json: Examples
 
 includes:
+  - start-general
   - introduction
   - message-formats
   - versioning
@@ -15,6 +16,7 @@ includes:
   - transaction
   - statistics
   - activity
+  - start-reference
 
 search: true
 ---

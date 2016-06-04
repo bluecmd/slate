@@ -1,4 +1,4 @@
-# Periods
+## Periods
 
 A lot of the data served by the Tink API derived from the either transactional or otherwise date-based information, is in various forms periodized into pre-computed date-based buckets for easy access. Statistics are computed for <code>YEARLY, MONTHLY</code> and <code>MONTHLY_ADJUSTED</code> buckets, which represents different time periods.
 

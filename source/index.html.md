@@ -5,6 +5,7 @@ language_tabs:
   - json: Examples
 
 includes:
+  - start-general
   - introduction
   - message-formats
   - versioning
@@ -15,7 +16,7 @@ includes:
   - transaction
   - statistics
   - activity
-  - delimiter
+  - start-reference
 
 search: true
 ---
@@ -28,6 +29,40 @@ search: true
 # Account Service
 
 An account could either be a debit account, a credit card, a loan or mortgage.
+
+## List accounts
+
+Returns an object with a list of the authenticated user's accounts.
+
+`GET /accounts/list`
+
+> Response Example
+
+```json
+{
+  "accounts": [
+    {
+      "accountNumber": "1234-123456789",
+      "balance": 34567.5,
+      "credentialsId": "6e68cc6287704273984567b3300c5822",
+      "excluded": false,
+      "favored": false,
+      "id": "a6bb87e57a8c4dd4874b241471a2b9e8",
+      "name": "Privatkonto",
+      "ownership": 0.5,
+      "type": "string"
+    }
+  ]
+}
+```
+
+
+### Response: AccountListResponse
+
+Parameter | Type | Description
+--------- | ---- | -----------
+accounts | array[Account] | A list of accounts
+
 
 ## Update an Account
 
@@ -106,40 +141,6 @@ id | string | The internal identifier of account.
 name | string | The display name of the account. This can be modified by the user.
 ownership | number | The ownership ratio indicating how much of the account is owned by the user. This is used to determine how much of transactions belonging to this account should be attributed to the user when statistics are calculated. This can be modified by the user.
 type | string | The type of the account. This can be modified by the user.. Values: <code style="white-space: nowrap;">CHECKING</code>, <code style="white-space: nowrap;">SAVINGS</code>, <code style="white-space: nowrap;">INVESTMENT</code>, <code style="white-space: nowrap;">CREDIT_CARD</code>, <code style="white-space: nowrap;">LOAN</code>
-
-
-## List accounts
-
-Returns an object with a list of the authenticated user's accounts.
-
-`GET /accounts/list`
-
-> Response Example
-
-```json
-{
-  "accounts": [
-    {
-      "accountNumber": "1234-123456789",
-      "balance": 34567.5,
-      "credentialsId": "6e68cc6287704273984567b3300c5822",
-      "excluded": false,
-      "favored": false,
-      "id": "a6bb87e57a8c4dd4874b241471a2b9e8",
-      "name": "Privatkonto",
-      "ownership": 0.5,
-      "type": "string"
-    }
-  ]
-}
-```
-
-
-### Response: AccountListResponse
-
-Parameter | Type | Description
---------- | ---- | -----------
-accounts | array[Account] | A list of accounts
 
 
 # Activity Service
@@ -495,141 +496,6 @@ value | number | The value of the statistics for this type, period, and descript
 
 Transactions Service
 
-## Get categorization clusters
-
-Returns an object holding clusters of transactions to be categorized and possible categorization level improvement
-
-`GET /transactions/suggest`
-
-### Query Parameters
-
-Parameter | Description
---------- | -----------
-numberOfClusters | Max number of clusters returned
-evaluateEverything | 
-
-
-> Response Example
-
-```json
-{
-  "categorizationImprovement": 0.01,
-  "categorizationLevel": 0.93,
-  "clusters": [
-    {
-      "categorizationImprovement": 0.003,
-      "description": "McDonalds Stock",
-      "transactions": [
-        {
-          "accountId": "3fe2d96efacd4dc5994404a950f238a9",
-          "amount": 34.5,
-          "categoryId": "0e1bade6a7e3459eb794f27b7ba4cea0",
-          "categoryType": "EXPENSES",
-          "credentialsId": "65bc7a41a66e4ad1aad199bbfb3c5098",
-          "date": "1455740874875",
-          "description": "Stadium Sergelg Stockholm",
-          "id": "79c6c9c27d6e42489e888e08d27205a1",
-          "lastModified": "1455740874875",
-          "merchantId": "ba3f9312fa7d442abde61ca419877fbf",
-          "notes": "wedding",
-          "originalAmount": 34.5,
-          "originalDate": "1455740874875",
-          "originalDescription": "Stadium Sergelg Stockholm",
-          "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
-          "pending": false,
-          "timestamp": "1464543093494",
-          "type": "CREDIT_CARD",
-          "upcoming": true,
-          "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
-        }
-      ]
-    }
-  ]
-}
-```
-
-
-### Response: SuggestTransactionsResponse
-
-Parameter | Type | Description
---------- | ---- | -----------
-categorizationImprovement | number | The categorization improvement achieve if all clusters are categorized.
-categorizationLevel | number | The current categorization level before categorization.
-clusters | array[TransactionCluster] | Clusters to categorize.
-
-
-## Get similar transactions
-
-Returns an object holding a list of transactions similar to the supplied transaction based on description and a list of statistics summarizing these transactions
-
-`GET /transactions/{id}/similar`
-
-### Parameters
-
-Parameter | Description
---------- | -----------
-id | The id of the transaction
-
-
-### Query Parameters
-
-Parameter | Description
---------- | -----------
-categoryId | Returns similar of the this cateogry
-includeSelf | Include the supplied transaction in response
-
-
-> Response Example
-
-```json
-{
-  "statistics": [
-    {
-      "description": "fe9e199c2ca94c12baf1f3eb4a4122de",
-      "payload": "690667930d7e4f2ba0d9aa5f7d2a1941",
-      "period": "2014-12-15",
-      "resolution": "DAILY",
-      "type": "expenses-by-account",
-      "userId": "d9f134ee2eb44846a4e02990ecc8d32e",
-      "value": 1298.5
-    }
-  ],
-  "transactions": [
-    {
-      "accountId": "3fe2d96efacd4dc5994404a950f238a9",
-      "amount": 34.5,
-      "categoryId": "0e1bade6a7e3459eb794f27b7ba4cea0",
-      "categoryType": "EXPENSES",
-      "credentialsId": "65bc7a41a66e4ad1aad199bbfb3c5098",
-      "date": "1455740874875",
-      "description": "Stadium Sergelg Stockholm",
-      "id": "79c6c9c27d6e42489e888e08d27205a1",
-      "lastModified": "1455740874875",
-      "merchantId": "ba3f9312fa7d442abde61ca419877fbf",
-      "notes": "wedding",
-      "originalAmount": 34.5,
-      "originalDate": "1455740874875",
-      "originalDescription": "Stadium Sergelg Stockholm",
-      "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
-      "pending": false,
-      "timestamp": "1464543093494",
-      "type": "CREDIT_CARD",
-      "upcoming": true,
-      "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
-    }
-  ]
-}
-```
-
-
-### Response: SimilarTransactionsResponse
-
-Parameter | Type | Description
---------- | ---- | -----------
-statistics | array[Statistic] | Statistics of type 'income-and-expenses-and-transfers' for the similar transactions.
-transactions | array[Transaction] | List of similar transactions.
-
-
 ## Get one transaction
 
 Returns a transaction matching the requested id
@@ -882,6 +748,69 @@ upcoming | boolean | Indicates if this is an upcoming transaction not booked yet
 userId | string | The internal identifier of the user that the transaction belongs to.
 
 
+## Get categorization clusters
+
+Returns an object holding clusters of transactions to be categorized and possible categorization level improvement
+
+`GET /transactions/suggest`
+
+### Query Parameters
+
+Parameter | Description
+--------- | -----------
+numberOfClusters | Max number of clusters returned
+evaluateEverything | 
+
+
+> Response Example
+
+```json
+{
+  "categorizationImprovement": 0.01,
+  "categorizationLevel": 0.93,
+  "clusters": [
+    {
+      "categorizationImprovement": 0.003,
+      "description": "McDonalds Stock",
+      "transactions": [
+        {
+          "accountId": "3fe2d96efacd4dc5994404a950f238a9",
+          "amount": 34.5,
+          "categoryId": "0e1bade6a7e3459eb794f27b7ba4cea0",
+          "categoryType": "EXPENSES",
+          "credentialsId": "65bc7a41a66e4ad1aad199bbfb3c5098",
+          "date": "1455740874875",
+          "description": "Stadium Sergelg Stockholm",
+          "id": "79c6c9c27d6e42489e888e08d27205a1",
+          "lastModified": "1455740874875",
+          "merchantId": "ba3f9312fa7d442abde61ca419877fbf",
+          "notes": "wedding",
+          "originalAmount": 34.5,
+          "originalDate": "1455740874875",
+          "originalDescription": "Stadium Sergelg Stockholm",
+          "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
+          "pending": false,
+          "timestamp": "1464543093494",
+          "type": "CREDIT_CARD",
+          "upcoming": true,
+          "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
+        }
+      ]
+    }
+  ]
+}
+```
+
+
+### Response: SuggestTransactionsResponse
+
+Parameter | Type | Description
+--------- | ---- | -----------
+categorizationImprovement | number | The categorization improvement achieve if all clusters are categorized.
+categorizationLevel | number | The current categorization level before categorization.
+clusters | array[TransactionCluster] | Clusters to categorize.
+
+
 ## Change category of transactions
 
 Changes category of the supplied list of transactions to the supplied category
@@ -911,9 +840,239 @@ categoryId | string | The internal identifier of the category that the list of t
 transactionIds | array[string] | A list of internal identifiers of the transactions categorized.
 
 
+## Get similar transactions
+
+Returns an object holding a list of transactions similar to the supplied transaction based on description and a list of statistics summarizing these transactions
+
+`GET /transactions/{id}/similar`
+
+### Parameters
+
+Parameter | Description
+--------- | -----------
+id | The id of the transaction
+
+
+### Query Parameters
+
+Parameter | Description
+--------- | -----------
+categoryId | Returns similar of the this cateogry
+includeSelf | Include the supplied transaction in response
+
+
+> Response Example
+
+```json
+{
+  "statistics": [
+    {
+      "description": "fe9e199c2ca94c12baf1f3eb4a4122de",
+      "payload": "690667930d7e4f2ba0d9aa5f7d2a1941",
+      "period": "2014-12-15",
+      "resolution": "DAILY",
+      "type": "expenses-by-account",
+      "userId": "d9f134ee2eb44846a4e02990ecc8d32e",
+      "value": 1298.5
+    }
+  ],
+  "transactions": [
+    {
+      "accountId": "3fe2d96efacd4dc5994404a950f238a9",
+      "amount": 34.5,
+      "categoryId": "0e1bade6a7e3459eb794f27b7ba4cea0",
+      "categoryType": "EXPENSES",
+      "credentialsId": "65bc7a41a66e4ad1aad199bbfb3c5098",
+      "date": "1455740874875",
+      "description": "Stadium Sergelg Stockholm",
+      "id": "79c6c9c27d6e42489e888e08d27205a1",
+      "lastModified": "1455740874875",
+      "merchantId": "ba3f9312fa7d442abde61ca419877fbf",
+      "notes": "wedding",
+      "originalAmount": 34.5,
+      "originalDate": "1455740874875",
+      "originalDescription": "Stadium Sergelg Stockholm",
+      "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
+      "pending": false,
+      "timestamp": "1464543093494",
+      "type": "CREDIT_CARD",
+      "upcoming": true,
+      "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
+    }
+  ]
+}
+```
+
+
+### Response: SimilarTransactionsResponse
+
+Parameter | Type | Description
+--------- | ---- | -----------
+statistics | array[Statistic] | Statistics of type 'income-and-expenses-and-transfers' for the similar transactions.
+transactions | array[Transaction] | List of similar transactions.
+
+
 # User Service
 
 User Service handles operations regarding the User
+
+## Get the user
+
+Returns the user object. Note that the password field is not stored in clear text nor populated when getting the user. It's only used for setting the password when registering a new user.
+
+`GET /user`
+
+> Response Example
+
+```json
+{
+  "created": "string",
+  "flags": [
+    "string",
+    "string"
+  ],
+  "id": "6e68cc6287704273984567b3300c5822",
+  "password": "string",
+  "profile": {
+    "currency": "SEK",
+    "locale": "sv_SE",
+    "market": "SE",
+    "notificationSettings": {
+      "balance": false,
+      "budget": false,
+      "doubleCharge": false,
+      "income": false,
+      "largeExpense": false,
+      "summaryMonthly": false,
+      "summaryWeekly": false,
+      "transaction": false,
+      "unusualAccount": false,
+      "unusualCategory": false
+    },
+    "periodAdjustedDay": "25",
+    "periodMode": "MONTHLY_ADJUSTED",
+    "timeZone": "Europe/Stockholm"
+  },
+  "username": "nisse@manpower.se"
+}
+```
+
+
+### Response: User
+
+Parameter | Type | Description
+--------- | ---- | -----------
+created | string | The date when the user was created.
+flags | array[string] | The user-specific feature flags assigned to the user.
+id | string | The internal identifier of the user.
+password | string | The password of the user (only included at registration).
+profile | UserProfile | The configurable profile of the user
+username | string | The username (usually email) of the user.
+
+
+## Update the user
+
+Updates certain user modifiable properties of a user. Please refer to the body schema to see which properties are modifiable by the user.
+
+`PUT /user`
+
+> Request Example
+
+```json
+{
+  "created": "string",
+  "flags": [
+    "string",
+    "string"
+  ],
+  "id": "6e68cc6287704273984567b3300c5822",
+  "password": "string",
+  "profile": {
+    "currency": "SEK",
+    "locale": "sv_SE",
+    "market": "SE",
+    "notificationSettings": {
+      "balance": false,
+      "budget": false,
+      "doubleCharge": false,
+      "income": false,
+      "largeExpense": false,
+      "summaryMonthly": false,
+      "summaryWeekly": false,
+      "transaction": false,
+      "unusualAccount": false,
+      "unusualCategory": false
+    },
+    "periodAdjustedDay": "25",
+    "periodMode": "MONTHLY_ADJUSTED",
+    "timeZone": "Europe/Stockholm"
+  },
+  "username": "nisse@manpower.se"
+}
+```
+
+
+### Body: User
+
+The updated user object
+
+Parameter | Type | Description
+--------- | ---- | -----------
+created | string | The date when the user was created.
+flags | array[string] | The user-specific feature flags assigned to the user.
+id | string | The internal identifier of the user.
+password | string | The password of the user (only included at registration).
+profile | UserProfile | The configurable profile of the user
+username | string | The username (usually email) of the user.
+
+
+> Response Example
+
+```json
+{
+  "created": "string",
+  "flags": [
+    "string",
+    "string"
+  ],
+  "id": "6e68cc6287704273984567b3300c5822",
+  "password": "string",
+  "profile": {
+    "currency": "SEK",
+    "locale": "sv_SE",
+    "market": "SE",
+    "notificationSettings": {
+      "balance": false,
+      "budget": false,
+      "doubleCharge": false,
+      "income": false,
+      "largeExpense": false,
+      "summaryMonthly": false,
+      "summaryWeekly": false,
+      "transaction": false,
+      "unusualAccount": false,
+      "unusualCategory": false
+    },
+    "periodAdjustedDay": "25",
+    "periodMode": "MONTHLY_ADJUSTED",
+    "timeZone": "Europe/Stockholm"
+  },
+  "username": "nisse@manpower.se"
+}
+```
+
+
+### Response: User
+
+Parameter | Type | Description
+--------- | ---- | -----------
+created | string | The date when the user was created.
+flags | array[string] | The user-specific feature flags assigned to the user.
+id | string | The internal identifier of the user.
+password | string | The password of the user (only included at registration).
+profile | UserProfile | The configurable profile of the user
+username | string | The username (usually email) of the user.
+
 
 ## Get the user profile
 
@@ -1090,163 +1249,5 @@ desired | The ISO 3166-1 alpha-2 country code of the desired market
 Parameter | Type | Description
 --------- | ---- | -----------
 markets | array[Market] | 
-
-
-## Get the user
-
-Returns the user object. Note that the password field is not stored in clear text nor populated when getting the user. It's only used for setting the password when registering a new user.
-
-`GET /user`
-
-> Response Example
-
-```json
-{
-  "created": "string",
-  "flags": [
-    "string",
-    "string"
-  ],
-  "id": "6e68cc6287704273984567b3300c5822",
-  "password": "string",
-  "profile": {
-    "currency": "SEK",
-    "locale": "sv_SE",
-    "market": "SE",
-    "notificationSettings": {
-      "balance": false,
-      "budget": false,
-      "doubleCharge": false,
-      "income": false,
-      "largeExpense": false,
-      "summaryMonthly": false,
-      "summaryWeekly": false,
-      "transaction": false,
-      "unusualAccount": false,
-      "unusualCategory": false
-    },
-    "periodAdjustedDay": "25",
-    "periodMode": "MONTHLY_ADJUSTED",
-    "timeZone": "Europe/Stockholm"
-  },
-  "username": "nisse@manpower.se"
-}
-```
-
-
-### Response: User
-
-Parameter | Type | Description
---------- | ---- | -----------
-created | string | The date when the user was created.
-flags | array[string] | The user-specific feature flags assigned to the user.
-id | string | The internal identifier of the user.
-password | string | The password of the user (only included at registration).
-profile | UserProfile | The configurable profile of the user
-username | string | The username (usually email) of the user.
-
-
-## Update the user
-
-Updates certain user modifiable properties of a user. Please refer to the body schema to see which properties are modifiable by the user.
-
-`PUT /user`
-
-> Request Example
-
-```json
-{
-  "created": "string",
-  "flags": [
-    "string",
-    "string"
-  ],
-  "id": "6e68cc6287704273984567b3300c5822",
-  "password": "string",
-  "profile": {
-    "currency": "SEK",
-    "locale": "sv_SE",
-    "market": "SE",
-    "notificationSettings": {
-      "balance": false,
-      "budget": false,
-      "doubleCharge": false,
-      "income": false,
-      "largeExpense": false,
-      "summaryMonthly": false,
-      "summaryWeekly": false,
-      "transaction": false,
-      "unusualAccount": false,
-      "unusualCategory": false
-    },
-    "periodAdjustedDay": "25",
-    "periodMode": "MONTHLY_ADJUSTED",
-    "timeZone": "Europe/Stockholm"
-  },
-  "username": "nisse@manpower.se"
-}
-```
-
-
-### Body: User
-
-The updated user object
-
-Parameter | Type | Description
---------- | ---- | -----------
-created | string | The date when the user was created.
-flags | array[string] | The user-specific feature flags assigned to the user.
-id | string | The internal identifier of the user.
-password | string | The password of the user (only included at registration).
-profile | UserProfile | The configurable profile of the user
-username | string | The username (usually email) of the user.
-
-
-> Response Example
-
-```json
-{
-  "created": "string",
-  "flags": [
-    "string",
-    "string"
-  ],
-  "id": "6e68cc6287704273984567b3300c5822",
-  "password": "string",
-  "profile": {
-    "currency": "SEK",
-    "locale": "sv_SE",
-    "market": "SE",
-    "notificationSettings": {
-      "balance": false,
-      "budget": false,
-      "doubleCharge": false,
-      "income": false,
-      "largeExpense": false,
-      "summaryMonthly": false,
-      "summaryWeekly": false,
-      "transaction": false,
-      "unusualAccount": false,
-      "unusualCategory": false
-    },
-    "periodAdjustedDay": "25",
-    "periodMode": "MONTHLY_ADJUSTED",
-    "timeZone": "Europe/Stockholm"
-  },
-  "username": "nisse@manpower.se"
-}
-```
-
-
-### Response: User
-
-Parameter | Type | Description
---------- | ---- | -----------
-created | string | The date when the user was created.
-flags | array[string] | The user-specific feature flags assigned to the user.
-id | string | The internal identifier of the user.
-password | string | The password of the user (only included at registration).
-profile | UserProfile | The configurable profile of the user
-username | string | The username (usually email) of the user.
 
 

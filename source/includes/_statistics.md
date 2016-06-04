@@ -1,4 +1,4 @@
-# Statistics
+## Statistics
 
 By querying the statistics endpoint, an API consumer can select the specific types of data to access. The query should be posted in the request body and you can specify any of the properties available to filter the result set. Defining multiple properties will yield an <code>AND</code> operation, and specifying multiple values of a property will yield an <code>OR</code> operation.
 

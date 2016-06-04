@@ -1,4 +1,4 @@
-# Categories
+## Categories
 
 The categories that are available for the user to categorize her transactions with, while structurally being a category tree, are available as a flat list of categories with parent/child relationships using their <code>id</code> and <code>parent</code> fields.
 

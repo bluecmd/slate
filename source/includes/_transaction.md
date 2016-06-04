@@ -1,4 +1,4 @@
-# Transaction
+## Transaction
 
 An <code>account</code> usually contains multiple transactions (except for certain types of accounts where Tink can't access the underlying transactions, for example, certain <code>INVESTMENT</code> accounts). The <code>transaction</code> model represents any operations on an account, and could represent both the actual credit-card purchase on a <code>CREDIT_CARD</code> account, but also represent the transaction when you payed your credit-card bill. Most commonly, the transactions on an <code>account</code> should represent what the end-user typically.
 
