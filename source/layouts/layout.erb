@@ -73,10 +73,10 @@ under the License.
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <%= yield %>
         <% current_page.data.includes && current_page.data.includes.each do |include| %>
           <%= partial "includes/#{include}" %>
         <% end %>
+        <%= yield %>
       </div>
       <div class="dark-box">
         <% if language_tabs %>
