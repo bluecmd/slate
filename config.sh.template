@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Save this file as config.sh and configure path to tink-backend root folder
+TINK_BACKEND=/Users/jelgh/dev/tink/tink-backend
