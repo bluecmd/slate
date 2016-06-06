@@ -1,0 +1,28 @@
+---
+title: Tink API Reference
+
+language_tabs:
+  - json: Examples
+
+includes:
+  - start-general
+  - main-introduction
+  - main-message-formats
+  - main-versioning
+  - main-periods
+  - main-categories
+  - main-user
+  - main-account
+  - main-transaction
+  - main-statistics
+  - main-activity
+  - start-reference
+
+search: true
+---
+
+
+
+
+
+

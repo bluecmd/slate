@@ -1,0 +1,24 @@
+---
+title: Tink API Reference
+
+language_tabs:
+  - json: Examples
+
+includes:
+  - start-general
+  - connector-introduction
+  - connector-message-formats
+  - connector-authorization
+  - connector-users
+  - connector-accounts
+  - connector-transactions
+  - start-reference
+
+search: true
+---
+
+
+
+
+
+
