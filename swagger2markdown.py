@@ -37,6 +37,7 @@ def exampleValue(type):
         'string': 'string',
         'double': 1.5,
         'number': 0,
+        'integer': 0,
         'array': [],
         'boolean': False,
         'datetime': 1465032304000
@@ -47,7 +48,7 @@ def exampleStringToValue(type, value):
     if type == 'double':
         return float(value)
     
-    if type == 'number':
+    if type == 'number' or type == 'integer':
         try:
             return int(value)
         except:
