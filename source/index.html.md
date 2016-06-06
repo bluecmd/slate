@@ -64,6 +64,21 @@ Parameter | Type | Description
 accounts | array[Account] | A list of accounts
 
 
+#### Account
+
+Parameter | Type | Description
+--------- | ---- | -----------
+accountNumber | string | The account number of the account.
+balance | number | The current balance of the account.
+credentialsId | string | The internal identifier of the credentials that the account belongs to.
+excluded | boolean | Indicates if the user has excluded the account. This can be modified by the user.
+favored | boolean | Indicates if the user has favored the account. This can be modified by the user.
+id | string | The internal identifier of account.
+name | string | The display name of the account. This can be modified by the user.
+ownership | number | The ownership ratio indicating how much of the account is owned by the user. This is used to determine how much of transactions belonging to this account should be attributed to the user when statistics are calculated. This can be modified by the user.
+type | string | The type of the account. This can be modified by the user.. Values: <code style="white-space: nowrap;">CHECKING</code>, <code style="white-space: nowrap;">SAVINGS</code>, <code style="white-space: nowrap;">INVESTMENT</code>, <code style="white-space: nowrap;">CREDIT_CARD</code>, <code style="white-space: nowrap;">LOAN</code>
+
+
 ## Update an Account
 
 Updates certain user modifiable properties of an account. Please refer to the body schema to see which properties are modifiable by the user.
@@ -210,7 +225,7 @@ Returns all categories
   "primaryName": "Food & Drinks",
   "searchTerms": "food,lunch,snacks",
   "secondaryName": "Restaurants",
-  "sortOrder": "45",
+  "sortOrder": 45,
   "type": "EXPENSES",
   "typeName": "Expenses"
 }
@@ -265,6 +280,17 @@ Lists all registered devices.
 Parameter | Type | Description
 --------- | ---- | -----------
 devices | array[Device] | 
+
+
+#### Device
+
+Parameter | Type | Description
+--------- | ---- | -----------
+appId | string | The app id of the app that registers the device
+deviceToken | string | A device token, should be unique per device and app
+notificationToken | string | The APN or GCM token
+os | string | The operating system of the device. Values: <code style="white-space: nowrap;">ANDROID</code>, <code style="white-space: nowrap;">IOS</code>
+userAgent | string | The User-Agent of the device
 
 
 ## Deregister a device
@@ -335,8 +361,8 @@ Returns a response containing transaction and their corresponding statistics mat
 {
   "endDate": "1455740874875",
   "includeUpcoming": false,
-  "limit": "20",
-  "offset": "20",
+  "limit": 20,
+  "offset": 20,
   "order": "ASC",
   "queryString": "Food this week",
   "sort": "DATE",
@@ -365,7 +391,7 @@ startDate | string | The start date of the result.
 
 ```json
 {
-  "count": "110",
+  "count": 110,
   "net": 1288.45,
   "periodAmounts": [
     {
@@ -376,8 +402,8 @@ startDate | string | The start date of the result.
   "query": {
     "endDate": "1455740874875",
     "includeUpcoming": false,
-    "limit": "20",
-    "offset": "20",
+    "limit": 20,
+    "offset": 20,
     "order": "ASC",
     "queryString": "Food this week",
     "sort": "DATE",
@@ -402,7 +428,7 @@ startDate | string | The start date of the result.
         "originalDescription": "Stadium Sergelg Stockholm",
         "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
         "pending": false,
-        "timestamp": "1464543093494",
+        "timestamp": 1464543093494,
         "type": "CREDIT_CARD",
         "upcoming": true,
         "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
@@ -423,6 +449,62 @@ net | number | The transaction amount net of the result.
 periodAmounts | array[StringDoublePair] | Key value object holding periods and statistics values for result with the period specified in query.
 query | SearchQuery | The query executed.
 results | array[SearchResult] | The search result.
+
+
+#### SearchResult
+
+Parameter | Type | Description
+--------- | ---- | -----------
+transaction | Transaction | The transactions resulting from the query.
+type | string | The search type.. Values: <code style="white-space: nowrap;">STATEMENT</code>, <code style="white-space: nowrap;">TRANSACTION</code>, <code style="white-space: nowrap;">CATEGORY</code>, <code style="white-space: nowrap;">BUDGET</code>, <code style="white-space: nowrap;">GOAL</code>, <code style="white-space: nowrap;">SUGGESTION</code>
+
+
+#### Transaction
+
+Parameter | Type | Description
+--------- | ---- | -----------
+accountId | string | The internal identifier of the account that the transaction belongs to.
+amount | number | The amount of the transaction. This can be modified by the user.
+categoryId | string | The category of the transaction. This can be modified by the user.
+categoryType | string | The category type of the transaction.. Values: <code style="white-space: nowrap;">INCOME</code>, <code style="white-space: nowrap;">EXPENSES</code>, <code style="white-space: nowrap;">TRANSFERS</code>
+credentialsId | string | The internal identifier of the credentials that the transaction belongs to.
+date | string | The date the transaction was executed. This can be modified by the user.
+description | string | The description of the transaction. This can be modified by the user.
+id | string | The internal identifier of the transaction.
+lastModified | string | The date the transaction was last modified by the user.
+merchantId | string | The internal identifier of the merchant that the transaction belongs to. If available.
+notes | string | A note specified by the user. This can be modified by the user.
+originalAmount | number | The original amount that was received from the provider, before the user changed it.
+originalDate | string | The original date that was received from the provider, before the user changed it.
+originalDescription | string | The original description that was received from the provider, before the user changed it.
+payload | object | Meta data about the transaction, in key value format with Strings.
+pending | boolean | Indicates if this transaction has been settled or is still pending.
+timestamp | integer | The timestamp of when the transaction was first saved to database.
+type | string | The type of the transaction.. Values: <code style="white-space: nowrap;">DEFAULT</code>, <code style="white-space: nowrap;">CREDIT_CARD</code>, <code style="white-space: nowrap;">TRANSFER</code>, <code style="white-space: nowrap;">PAYMENT</code>, <code style="white-space: nowrap;">WITHDRAWAL</code>
+upcoming | boolean | Indicates if this is an upcoming transaction not booked yet.
+userId | string | The internal identifier of the user that the transaction belongs to.
+
+
+#### SearchQuery
+
+Parameter | Type | Description
+--------- | ---- | -----------
+endDate | string | The end date of the result.
+includeUpcoming | boolean | Indicates if result should include upcoming transactions.
+limit | integer | The limit for the result, used for paging.
+offset | integer | The offset for the result, used for paging.
+order | string | The order of the result.. Values: <code style="white-space: nowrap;">ASC</code>, <code style="white-space: nowrap;">DESC</code>
+queryString | string | The string query.
+sort | string | The sort order of the result.. Values: <code style="white-space: nowrap;">SCORE</code>, <code style="white-space: nowrap;">DATE</code>, <code style="white-space: nowrap;">ACCOUNT</code>, <code style="white-space: nowrap;">DESCRIPTION</code>, <code style="white-space: nowrap;">AMOUNT</code>, <code style="white-space: nowrap;">CATEGORY</code>
+startDate | string | The start date of the result.
+
+
+#### StringDoublePair
+
+Parameter | Type | Description
+--------- | ---- | -----------
+key | string | 
+value | number | 
 
 
 # Statistics Service
@@ -496,6 +578,195 @@ value | number | The value of the statistics for this type, period, and descript
 
 Transactions Service
 
+## Update a list of transactions
+
+Updates certain user modifiable properties of a list of transactions
+
+`PUT /transactions`
+
+> Request Example
+
+```json
+{
+  "accountId": "3fe2d96efacd4dc5994404a950f238a9",
+  "amount": 34.5,
+  "categoryId": "0e1bade6a7e3459eb794f27b7ba4cea0",
+  "categoryType": "EXPENSES",
+  "credentialsId": "65bc7a41a66e4ad1aad199bbfb3c5098",
+  "date": "1455740874875",
+  "description": "Stadium Sergelg Stockholm",
+  "id": "79c6c9c27d6e42489e888e08d27205a1",
+  "lastModified": "1455740874875",
+  "merchantId": "ba3f9312fa7d442abde61ca419877fbf",
+  "notes": "wedding",
+  "originalAmount": 34.5,
+  "originalDate": "1455740874875",
+  "originalDescription": "Stadium Sergelg Stockholm",
+  "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
+  "pending": false,
+  "timestamp": 1464543093494,
+  "type": "CREDIT_CARD",
+  "upcoming": true,
+  "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
+}
+```
+
+
+### Body: Transaction
+
+The transactions to be updated
+
+Parameter | Type | Description
+--------- | ---- | -----------
+accountId | string | The internal identifier of the account that the transaction belongs to.
+amount | number | The amount of the transaction. This can be modified by the user.
+categoryId | string | The category of the transaction. This can be modified by the user.
+categoryType | string | The category type of the transaction.. Values: <code style="white-space: nowrap;">INCOME</code>, <code style="white-space: nowrap;">EXPENSES</code>, <code style="white-space: nowrap;">TRANSFERS</code>
+credentialsId | string | The internal identifier of the credentials that the transaction belongs to.
+date | string | The date the transaction was executed. This can be modified by the user.
+description | string | The description of the transaction. This can be modified by the user.
+id | string | The internal identifier of the transaction.
+lastModified | string | The date the transaction was last modified by the user.
+merchantId | string | The internal identifier of the merchant that the transaction belongs to. If available.
+notes | string | A note specified by the user. This can be modified by the user.
+originalAmount | number | The original amount that was received from the provider, before the user changed it.
+originalDate | string | The original date that was received from the provider, before the user changed it.
+originalDescription | string | The original description that was received from the provider, before the user changed it.
+payload | object | Meta data about the transaction, in key value format with Strings.
+pending | boolean | Indicates if this transaction has been settled or is still pending.
+timestamp | integer | The timestamp of when the transaction was first saved to database.
+type | string | The type of the transaction.. Values: <code style="white-space: nowrap;">DEFAULT</code>, <code style="white-space: nowrap;">CREDIT_CARD</code>, <code style="white-space: nowrap;">TRANSFER</code>, <code style="white-space: nowrap;">PAYMENT</code>, <code style="white-space: nowrap;">WITHDRAWAL</code>
+upcoming | boolean | Indicates if this is an upcoming transaction not booked yet.
+userId | string | The internal identifier of the user that the transaction belongs to.
+
+
+## Change category of transactions
+
+Changes category of the supplied list of transactions to the supplied category
+
+`POST /transactions/categorize`
+
+> Request Example
+
+```json
+{
+  "categoryId": "2d3bd65493b549e1927d97a2d0683ab9",
+  "transactionIds": [
+    "92e9e178cc22437281084c572ada8d7d",
+    "a40db0b79bf94d2a9340cbc35d8b8020"
+  ]
+}
+```
+
+
+### Body: CategorizeTransactionsRequest
+
+List of objects holding new category and the transactions to be categorized
+
+Parameter | Type | Description
+--------- | ---- | -----------
+categoryId | string | The internal identifier of the category that the list of transactions is categorized to.
+transactionIds | array[string] | A list of internal identifiers of the transactions categorized.
+
+
+## Get categorization clusters
+
+Returns an object holding clusters of transactions to be categorized and possible categorization level improvement
+
+`GET /transactions/suggest`
+
+### Query Parameters
+
+Parameter | Description
+--------- | -----------
+numberOfClusters | Max number of clusters returned
+evaluateEverything | 
+
+
+> Response Example
+
+```json
+{
+  "categorizationImprovement": 0.01,
+  "categorizationLevel": 0.93,
+  "clusters": [
+    {
+      "categorizationImprovement": 0.003,
+      "description": "McDonalds Stock",
+      "transactions": [
+        {
+          "accountId": "3fe2d96efacd4dc5994404a950f238a9",
+          "amount": 34.5,
+          "categoryId": "0e1bade6a7e3459eb794f27b7ba4cea0",
+          "categoryType": "EXPENSES",
+          "credentialsId": "65bc7a41a66e4ad1aad199bbfb3c5098",
+          "date": "1455740874875",
+          "description": "Stadium Sergelg Stockholm",
+          "id": "79c6c9c27d6e42489e888e08d27205a1",
+          "lastModified": "1455740874875",
+          "merchantId": "ba3f9312fa7d442abde61ca419877fbf",
+          "notes": "wedding",
+          "originalAmount": 34.5,
+          "originalDate": "1455740874875",
+          "originalDescription": "Stadium Sergelg Stockholm",
+          "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
+          "pending": false,
+          "timestamp": 1464543093494,
+          "type": "CREDIT_CARD",
+          "upcoming": true,
+          "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
+        }
+      ]
+    }
+  ]
+}
+```
+
+
+### Response: SuggestTransactionsResponse
+
+Parameter | Type | Description
+--------- | ---- | -----------
+categorizationImprovement | number | The categorization improvement achieve if all clusters are categorized.
+categorizationLevel | number | The current categorization level before categorization.
+clusters | array[TransactionCluster] | Clusters to categorize.
+
+
+#### TransactionCluster
+
+Parameter | Type | Description
+--------- | ---- | -----------
+categorizationImprovement | number | The categorization improvement achived if cluster is categorized.
+description | string | A description of the cluster to categorized.
+transactions | array[Transaction] | List of transactions belonging to this cluster.
+
+
+#### Transaction
+
+Parameter | Type | Description
+--------- | ---- | -----------
+accountId | string | The internal identifier of the account that the transaction belongs to.
+amount | number | The amount of the transaction. This can be modified by the user.
+categoryId | string | The category of the transaction. This can be modified by the user.
+categoryType | string | The category type of the transaction.. Values: <code style="white-space: nowrap;">INCOME</code>, <code style="white-space: nowrap;">EXPENSES</code>, <code style="white-space: nowrap;">TRANSFERS</code>
+credentialsId | string | The internal identifier of the credentials that the transaction belongs to.
+date | string | The date the transaction was executed. This can be modified by the user.
+description | string | The description of the transaction. This can be modified by the user.
+id | string | The internal identifier of the transaction.
+lastModified | string | The date the transaction was last modified by the user.
+merchantId | string | The internal identifier of the merchant that the transaction belongs to. If available.
+notes | string | A note specified by the user. This can be modified by the user.
+originalAmount | number | The original amount that was received from the provider, before the user changed it.
+originalDate | string | The original date that was received from the provider, before the user changed it.
+originalDescription | string | The original description that was received from the provider, before the user changed it.
+payload | object | Meta data about the transaction, in key value format with Strings.
+pending | boolean | Indicates if this transaction has been settled or is still pending.
+timestamp | integer | The timestamp of when the transaction was first saved to database.
+type | string | The type of the transaction.. Values: <code style="white-space: nowrap;">DEFAULT</code>, <code style="white-space: nowrap;">CREDIT_CARD</code>, <code style="white-space: nowrap;">TRANSFER</code>, <code style="white-space: nowrap;">PAYMENT</code>, <code style="white-space: nowrap;">WITHDRAWAL</code>
+upcoming | boolean | Indicates if this is an upcoming transaction not booked yet.
+userId | string | The internal identifier of the user that the transaction belongs to.
+
+
 ## Get one transaction
 
 Returns a transaction matching the requested id
@@ -529,7 +800,7 @@ id | The id of the transaction
   "originalDescription": "Stadium Sergelg Stockholm",
   "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
   "pending": false,
-  "timestamp": "1464543093494",
+  "timestamp": 1464543093494,
   "type": "CREDIT_CARD",
   "upcoming": true,
   "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
@@ -589,7 +860,7 @@ Updates certain user modifiable properties of a transaction
   "originalDescription": "Stadium Sergelg Stockholm",
   "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
   "pending": false,
-  "timestamp": "1464543093494",
+  "timestamp": 1464543093494,
   "type": "CREDIT_CARD",
   "upcoming": true,
   "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
@@ -652,7 +923,7 @@ userId | string | The internal identifier of the user that the transaction belon
   "originalDescription": "Stadium Sergelg Stockholm",
   "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
   "pending": false,
-  "timestamp": "1464543093494",
+  "timestamp": 1464543093494,
   "type": "CREDIT_CARD",
   "upcoming": true,
   "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
@@ -684,160 +955,6 @@ timestamp | integer | The timestamp of when the transaction was first saved to d
 type | string | The type of the transaction.. Values: <code style="white-space: nowrap;">DEFAULT</code>, <code style="white-space: nowrap;">CREDIT_CARD</code>, <code style="white-space: nowrap;">TRANSFER</code>, <code style="white-space: nowrap;">PAYMENT</code>, <code style="white-space: nowrap;">WITHDRAWAL</code>
 upcoming | boolean | Indicates if this is an upcoming transaction not booked yet.
 userId | string | The internal identifier of the user that the transaction belongs to.
-
-
-## Update a list of transactions
-
-Updates certain user modifiable properties of a list of transactions
-
-`PUT /transactions`
-
-> Request Example
-
-```json
-{
-  "accountId": "3fe2d96efacd4dc5994404a950f238a9",
-  "amount": 34.5,
-  "categoryId": "0e1bade6a7e3459eb794f27b7ba4cea0",
-  "categoryType": "EXPENSES",
-  "credentialsId": "65bc7a41a66e4ad1aad199bbfb3c5098",
-  "date": "1455740874875",
-  "description": "Stadium Sergelg Stockholm",
-  "id": "79c6c9c27d6e42489e888e08d27205a1",
-  "lastModified": "1455740874875",
-  "merchantId": "ba3f9312fa7d442abde61ca419877fbf",
-  "notes": "wedding",
-  "originalAmount": 34.5,
-  "originalDate": "1455740874875",
-  "originalDescription": "Stadium Sergelg Stockholm",
-  "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
-  "pending": false,
-  "timestamp": "1464543093494",
-  "type": "CREDIT_CARD",
-  "upcoming": true,
-  "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
-}
-```
-
-
-### Body: Transaction
-
-The transactions to be updated
-
-Parameter | Type | Description
---------- | ---- | -----------
-accountId | string | The internal identifier of the account that the transaction belongs to.
-amount | number | The amount of the transaction. This can be modified by the user.
-categoryId | string | The category of the transaction. This can be modified by the user.
-categoryType | string | The category type of the transaction.. Values: <code style="white-space: nowrap;">INCOME</code>, <code style="white-space: nowrap;">EXPENSES</code>, <code style="white-space: nowrap;">TRANSFERS</code>
-credentialsId | string | The internal identifier of the credentials that the transaction belongs to.
-date | string | The date the transaction was executed. This can be modified by the user.
-description | string | The description of the transaction. This can be modified by the user.
-id | string | The internal identifier of the transaction.
-lastModified | string | The date the transaction was last modified by the user.
-merchantId | string | The internal identifier of the merchant that the transaction belongs to. If available.
-notes | string | A note specified by the user. This can be modified by the user.
-originalAmount | number | The original amount that was received from the provider, before the user changed it.
-originalDate | string | The original date that was received from the provider, before the user changed it.
-originalDescription | string | The original description that was received from the provider, before the user changed it.
-payload | object | Meta data about the transaction, in key value format with Strings.
-pending | boolean | Indicates if this transaction has been settled or is still pending.
-timestamp | integer | The timestamp of when the transaction was first saved to database.
-type | string | The type of the transaction.. Values: <code style="white-space: nowrap;">DEFAULT</code>, <code style="white-space: nowrap;">CREDIT_CARD</code>, <code style="white-space: nowrap;">TRANSFER</code>, <code style="white-space: nowrap;">PAYMENT</code>, <code style="white-space: nowrap;">WITHDRAWAL</code>
-upcoming | boolean | Indicates if this is an upcoming transaction not booked yet.
-userId | string | The internal identifier of the user that the transaction belongs to.
-
-
-## Get categorization clusters
-
-Returns an object holding clusters of transactions to be categorized and possible categorization level improvement
-
-`GET /transactions/suggest`
-
-### Query Parameters
-
-Parameter | Description
---------- | -----------
-numberOfClusters | Max number of clusters returned
-evaluateEverything | 
-
-
-> Response Example
-
-```json
-{
-  "categorizationImprovement": 0.01,
-  "categorizationLevel": 0.93,
-  "clusters": [
-    {
-      "categorizationImprovement": 0.003,
-      "description": "McDonalds Stock",
-      "transactions": [
-        {
-          "accountId": "3fe2d96efacd4dc5994404a950f238a9",
-          "amount": 34.5,
-          "categoryId": "0e1bade6a7e3459eb794f27b7ba4cea0",
-          "categoryType": "EXPENSES",
-          "credentialsId": "65bc7a41a66e4ad1aad199bbfb3c5098",
-          "date": "1455740874875",
-          "description": "Stadium Sergelg Stockholm",
-          "id": "79c6c9c27d6e42489e888e08d27205a1",
-          "lastModified": "1455740874875",
-          "merchantId": "ba3f9312fa7d442abde61ca419877fbf",
-          "notes": "wedding",
-          "originalAmount": 34.5,
-          "originalDate": "1455740874875",
-          "originalDescription": "Stadium Sergelg Stockholm",
-          "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
-          "pending": false,
-          "timestamp": "1464543093494",
-          "type": "CREDIT_CARD",
-          "upcoming": true,
-          "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
-        }
-      ]
-    }
-  ]
-}
-```
-
-
-### Response: SuggestTransactionsResponse
-
-Parameter | Type | Description
---------- | ---- | -----------
-categorizationImprovement | number | The categorization improvement achieve if all clusters are categorized.
-categorizationLevel | number | The current categorization level before categorization.
-clusters | array[TransactionCluster] | Clusters to categorize.
-
-
-## Change category of transactions
-
-Changes category of the supplied list of transactions to the supplied category
-
-`POST /transactions/categorize`
-
-> Request Example
-
-```json
-{
-  "categoryId": "2d3bd65493b549e1927d97a2d0683ab9",
-  "transactionIds": [
-    "92e9e178cc22437281084c572ada8d7d",
-    "a40db0b79bf94d2a9340cbc35d8b8020"
-  ]
-}
-```
-
-
-### Body: CategorizeTransactionsRequest
-
-List of objects holding new category and the transactions to be categorized
-
-Parameter | Type | Description
---------- | ---- | -----------
-categoryId | string | The internal identifier of the category that the list of transactions is categorized to.
-transactionIds | array[string] | A list of internal identifiers of the transactions categorized.
 
 
 ## Get similar transactions
@@ -894,7 +1011,7 @@ includeSelf | Include the supplied transaction in response
       "originalDescription": "Stadium Sergelg Stockholm",
       "payload": "{TRANSFER_ACCOUNT:'40dc04e5353547378c84f34ffc88f853'}",
       "pending": false,
-      "timestamp": "1464543093494",
+      "timestamp": 1464543093494,
       "type": "CREDIT_CARD",
       "upcoming": true,
       "userId": "d9f134ee2eb44846a4e02990ecc8d32e"
@@ -910,6 +1027,45 @@ Parameter | Type | Description
 --------- | ---- | -----------
 statistics | array[Statistic] | Statistics of type 'income-and-expenses-and-transfers' for the similar transactions.
 transactions | array[Transaction] | List of similar transactions.
+
+
+#### Statistic
+
+Parameter | Type | Description
+--------- | ---- | -----------
+description | string | Identifier of the data the statistic represents.
+payload | string | Secondary identifier of the data the statistic represent
+period | string | The statistic's period, depends on it's resolution. On of: year, month, week or day. Format: '2014', '2014-02', 2014:45 or '2014-02-12'
+resolution | string | Resolution for the statistics.. Values: <code style="white-space: nowrap;">DAILY</code>, <code style="white-space: nowrap;">MONTHLY</code>, <code style="white-space: nowrap;">MONTHLY_ADJUSTED</code>, <code style="white-space: nowrap;">YEARLY</code>, <code style="white-space: nowrap;">ALL</code>, <code style="white-space: nowrap;">WEEKLY</code>
+type | string | The statistic's type.
+userId | string | The internal identifier of the user that the statistics belongs to.
+value | number | The value of the statistics for this type, period, and description.
+
+
+#### Transaction
+
+Parameter | Type | Description
+--------- | ---- | -----------
+accountId | string | The internal identifier of the account that the transaction belongs to.
+amount | number | The amount of the transaction. This can be modified by the user.
+categoryId | string | The category of the transaction. This can be modified by the user.
+categoryType | string | The category type of the transaction.. Values: <code style="white-space: nowrap;">INCOME</code>, <code style="white-space: nowrap;">EXPENSES</code>, <code style="white-space: nowrap;">TRANSFERS</code>
+credentialsId | string | The internal identifier of the credentials that the transaction belongs to.
+date | string | The date the transaction was executed. This can be modified by the user.
+description | string | The description of the transaction. This can be modified by the user.
+id | string | The internal identifier of the transaction.
+lastModified | string | The date the transaction was last modified by the user.
+merchantId | string | The internal identifier of the merchant that the transaction belongs to. If available.
+notes | string | A note specified by the user. This can be modified by the user.
+originalAmount | number | The original amount that was received from the provider, before the user changed it.
+originalDate | string | The original date that was received from the provider, before the user changed it.
+originalDescription | string | The original description that was received from the provider, before the user changed it.
+payload | object | Meta data about the transaction, in key value format with Strings.
+pending | boolean | Indicates if this transaction has been settled or is still pending.
+timestamp | integer | The timestamp of when the transaction was first saved to database.
+type | string | The type of the transaction.. Values: <code style="white-space: nowrap;">DEFAULT</code>, <code style="white-space: nowrap;">CREDIT_CARD</code>, <code style="white-space: nowrap;">TRANSFER</code>, <code style="white-space: nowrap;">PAYMENT</code>, <code style="white-space: nowrap;">WITHDRAWAL</code>
+upcoming | boolean | Indicates if this is an upcoming transaction not booked yet.
+userId | string | The internal identifier of the user that the transaction belongs to.
 
 
 # User Service
@@ -949,7 +1105,7 @@ Returns the user object. Note that the password field is not stored in clear tex
       "unusualAccount": false,
       "unusualCategory": false
     },
-    "periodAdjustedDay": "25",
+    "periodAdjustedDay": 25,
     "periodMode": "MONTHLY_ADJUSTED",
     "timeZone": "Europe/Stockholm"
   },
@@ -968,6 +1124,35 @@ id | string | The internal identifier of the user.
 password | string | The password of the user (only included at registration).
 profile | UserProfile | The configurable profile of the user
 username | string | The username (usually email) of the user.
+
+
+#### UserProfile
+
+Parameter | Type | Description
+--------- | ---- | -----------
+currency | string | The configured ISO 4217 currency code of the user. This can be modified by the user.
+locale | string | The configured locale of the user. This can be modified by the user.
+market | string | The primary market/country of the user.
+notificationSettings | NotificationSettings | The configured notification settings of the user. This can be modified by the user.
+periodAdjustedDay | integer | The configured day of the month to break the adjusted period on. This can be modified by the user.
+periodMode | string | The configured monthly period mode of the user. This can be modified by the user.. Values: <code style="white-space: nowrap;">MONTHLY</code>, <code style="white-space: nowrap;">MONTHLY_ADJUSTED</code>
+timeZone | string | The configured time zone of the user. This can be modified by the user.
+
+
+#### NotificationSettings
+
+Parameter | Type | Description
+--------- | ---- | -----------
+balance | boolean | Indicates if the user wants to receive notifications with low or high balances alerts.
+budget | boolean | Indicates if the user wants to receive notifications regarding her budgets.
+doubleCharge | boolean | Indicates if the user wants to receive notifications with double-charge alerts.
+income | boolean | Indicates if the user wants to receive notifications when an income is received.
+largeExpense | boolean | Indicates if the user wants to receive notifications when a large expense is detected.
+summaryMonthly | boolean | Indicates if the user wants to receive notifications with monthly summaries.
+summaryWeekly | boolean | Indicates if the user wants to receive notifications with weekly summaries.
+transaction | boolean | Indicates if the user wants to receive notifications for every transaction.
+unusualAccount | boolean | Indicates if the user wants to receive notifications when there is unusual activity on any of her accounts.
+unusualCategory | boolean | Indicates if the user wants to receive notifications when she has spend more than usual on something.
 
 
 ## Update the user
@@ -1003,7 +1188,7 @@ Updates certain user modifiable properties of a user. Please refer to the body s
       "unusualAccount": false,
       "unusualCategory": false
     },
-    "periodAdjustedDay": "25",
+    "periodAdjustedDay": 25,
     "periodMode": "MONTHLY_ADJUSTED",
     "timeZone": "Europe/Stockholm"
   },
@@ -1024,6 +1209,35 @@ id | string | The internal identifier of the user.
 password | string | The password of the user (only included at registration).
 profile | UserProfile | The configurable profile of the user
 username | string | The username (usually email) of the user.
+
+
+#### UserProfile
+
+Parameter | Type | Description
+--------- | ---- | -----------
+currency | string | The configured ISO 4217 currency code of the user. This can be modified by the user.
+locale | string | The configured locale of the user. This can be modified by the user.
+market | string | The primary market/country of the user.
+notificationSettings | NotificationSettings | The configured notification settings of the user. This can be modified by the user.
+periodAdjustedDay | integer | The configured day of the month to break the adjusted period on. This can be modified by the user.
+periodMode | string | The configured monthly period mode of the user. This can be modified by the user.. Values: <code style="white-space: nowrap;">MONTHLY</code>, <code style="white-space: nowrap;">MONTHLY_ADJUSTED</code>
+timeZone | string | The configured time zone of the user. This can be modified by the user.
+
+
+#### NotificationSettings
+
+Parameter | Type | Description
+--------- | ---- | -----------
+balance | boolean | Indicates if the user wants to receive notifications with low or high balances alerts.
+budget | boolean | Indicates if the user wants to receive notifications regarding her budgets.
+doubleCharge | boolean | Indicates if the user wants to receive notifications with double-charge alerts.
+income | boolean | Indicates if the user wants to receive notifications when an income is received.
+largeExpense | boolean | Indicates if the user wants to receive notifications when a large expense is detected.
+summaryMonthly | boolean | Indicates if the user wants to receive notifications with monthly summaries.
+summaryWeekly | boolean | Indicates if the user wants to receive notifications with weekly summaries.
+transaction | boolean | Indicates if the user wants to receive notifications for every transaction.
+unusualAccount | boolean | Indicates if the user wants to receive notifications when there is unusual activity on any of her accounts.
+unusualCategory | boolean | Indicates if the user wants to receive notifications when she has spend more than usual on something.
 
 
 > Response Example
@@ -1053,7 +1267,7 @@ username | string | The username (usually email) of the user.
       "unusualAccount": false,
       "unusualCategory": false
     },
-    "periodAdjustedDay": "25",
+    "periodAdjustedDay": 25,
     "periodMode": "MONTHLY_ADJUSTED",
     "timeZone": "Europe/Stockholm"
   },
@@ -1074,39 +1288,7 @@ profile | UserProfile | The configurable profile of the user
 username | string | The username (usually email) of the user.
 
 
-## Get the user profile
-
-Returns the user profile.
-
-`GET /user/profile`
-
-> Response Example
-
-```json
-{
-  "currency": "SEK",
-  "locale": "sv_SE",
-  "market": "SE",
-  "notificationSettings": {
-    "balance": false,
-    "budget": false,
-    "doubleCharge": false,
-    "income": false,
-    "largeExpense": false,
-    "summaryMonthly": false,
-    "summaryWeekly": false,
-    "transaction": false,
-    "unusualAccount": false,
-    "unusualCategory": false
-  },
-  "periodAdjustedDay": "25",
-  "periodMode": "MONTHLY_ADJUSTED",
-  "timeZone": "Europe/Stockholm"
-}
-```
-
-
-### Response: UserProfile
+#### UserProfile
 
 Parameter | Type | Description
 --------- | ---- | -----------
@@ -1119,90 +1301,20 @@ periodMode | string | The configured monthly period mode of the user. This can b
 timeZone | string | The configured time zone of the user. This can be modified by the user.
 
 
-## Update the user profile
-
-Updates certain user modifiable properties of a user's profile. Please refer to the body schema to see which properties are modifiable by the user.
-
-`PUT /user/profile`
-
-> Request Example
-
-```json
-{
-  "currency": "SEK",
-  "locale": "sv_SE",
-  "market": "SE",
-  "notificationSettings": {
-    "balance": false,
-    "budget": false,
-    "doubleCharge": false,
-    "income": false,
-    "largeExpense": false,
-    "summaryMonthly": false,
-    "summaryWeekly": false,
-    "transaction": false,
-    "unusualAccount": false,
-    "unusualCategory": false
-  },
-  "periodAdjustedDay": "25",
-  "periodMode": "MONTHLY_ADJUSTED",
-  "timeZone": "Europe/Stockholm"
-}
-```
-
-
-### Body: UserProfile
-
-The updated user profile object
+#### NotificationSettings
 
 Parameter | Type | Description
 --------- | ---- | -----------
-currency | string | The configured ISO 4217 currency code of the user. This can be modified by the user.
-locale | string | The configured locale of the user. This can be modified by the user.
-market | string | The primary market/country of the user.
-notificationSettings | NotificationSettings | The configured notification settings of the user. This can be modified by the user.
-periodAdjustedDay | integer | The configured day of the month to break the adjusted period on. This can be modified by the user.
-periodMode | string | The configured monthly period mode of the user. This can be modified by the user.. Values: <code style="white-space: nowrap;">MONTHLY</code>, <code style="white-space: nowrap;">MONTHLY_ADJUSTED</code>
-timeZone | string | The configured time zone of the user. This can be modified by the user.
-
-
-> Response Example
-
-```json
-{
-  "currency": "SEK",
-  "locale": "sv_SE",
-  "market": "SE",
-  "notificationSettings": {
-    "balance": false,
-    "budget": false,
-    "doubleCharge": false,
-    "income": false,
-    "largeExpense": false,
-    "summaryMonthly": false,
-    "summaryWeekly": false,
-    "transaction": false,
-    "unusualAccount": false,
-    "unusualCategory": false
-  },
-  "periodAdjustedDay": "25",
-  "periodMode": "MONTHLY_ADJUSTED",
-  "timeZone": "Europe/Stockholm"
-}
-```
-
-
-### Response: UserProfile
-
-Parameter | Type | Description
---------- | ---- | -----------
-currency | string | The configured ISO 4217 currency code of the user. This can be modified by the user.
-locale | string | The configured locale of the user. This can be modified by the user.
-market | string | The primary market/country of the user.
-notificationSettings | NotificationSettings | The configured notification settings of the user. This can be modified by the user.
-periodAdjustedDay | integer | The configured day of the month to break the adjusted period on. This can be modified by the user.
-periodMode | string | The configured monthly period mode of the user. This can be modified by the user.. Values: <code style="white-space: nowrap;">MONTHLY</code>, <code style="white-space: nowrap;">MONTHLY_ADJUSTED</code>
-timeZone | string | The configured time zone of the user. This can be modified by the user.
+balance | boolean | Indicates if the user wants to receive notifications with low or high balances alerts.
+budget | boolean | Indicates if the user wants to receive notifications regarding her budgets.
+doubleCharge | boolean | Indicates if the user wants to receive notifications with double-charge alerts.
+income | boolean | Indicates if the user wants to receive notifications when an income is received.
+largeExpense | boolean | Indicates if the user wants to receive notifications when a large expense is detected.
+summaryMonthly | boolean | Indicates if the user wants to receive notifications with monthly summaries.
+summaryWeekly | boolean | Indicates if the user wants to receive notifications with weekly summaries.
+transaction | boolean | Indicates if the user wants to receive notifications for every transaction.
+unusualAccount | boolean | Indicates if the user wants to receive notifications when there is unusual activity on any of her accounts.
+unusualCategory | boolean | Indicates if the user wants to receive notifications when she has spend more than usual on something.
 
 
 ## List markets
@@ -1249,5 +1361,207 @@ desired | The ISO 3166-1 alpha-2 country code of the desired market
 Parameter | Type | Description
 --------- | ---- | -----------
 markets | array[Market] | 
+
+
+#### Market
+
+Parameter | Type | Description
+--------- | ---- | -----------
+code | string | The ISO 3166-1 alpha-2 country code of the market.. Values: <code style="white-space: nowrap;">FR</code>, <code style="white-space: nowrap;">GB</code>, <code style="white-space: nowrap;">SE</code>, <code style="white-space: nowrap;">US</code>, <code style="white-space: nowrap;">CA</code>, <code style="white-space: nowrap;">NZ</code>, <code style="white-space: nowrap;">AU</code>, <code style="white-space: nowrap;">ES</code>, <code style="white-space: nowrap;">NL</code>, <code style="white-space: nowrap;">DK</code>, <code style="white-space: nowrap;">NO</code>, <code style="white-space: nowrap;">FI</code>, <code style="white-space: nowrap;">DE</code>, <code style="white-space: nowrap;">IT</code>, <code style="white-space: nowrap;">RO</code>, <code style="white-space: nowrap;">BE</code>, <code style="white-space: nowrap;">GR</code>, <code style="white-space: nowrap;">CZ</code>, <code style="white-space: nowrap;">PT</code>, <code style="white-space: nowrap;">HU</code>, <code style="white-space: nowrap;">AT</code>, <code style="white-space: nowrap;">BG</code>, <code style="white-space: nowrap;">SK</code>, <code style="white-space: nowrap;">IE</code>, <code style="white-space: nowrap;">HR</code>, <code style="white-space: nowrap;">SI</code>, <code style="white-space: nowrap;">LV</code>, <code style="white-space: nowrap;">EE</code>, <code style="white-space: nowrap;">CY</code>, <code style="white-space: nowrap;">LU</code>, <code style="white-space: nowrap;">MT</code>, <code style="white-space: nowrap;">PL</code>, <code style="white-space: nowrap;">BR</code>, <code style="white-space: nowrap;">IN</code>, <code style="white-space: nowrap;">SG</code>
+currencies | array[Currency] | The applicable currencies available in the market.
+defaultCurrency | string | The ISO 4217 code of the default currency.
+defaultLocale | string | The default locale in the market.
+defaultTimeZone | string | The default time zone in the market.
+description | string | The display name of the market
+status | boolean | Flag to indicate if this is the suggested market for the user.
+
+
+#### Currency
+
+Parameter | Type | Description
+--------- | ---- | -----------
+code | string | The ISO 4217 code of the currency.
+factor | number | An approximate currency conversion factor to inversely scale triggers to the EUR currency.
+prefixed | boolean | Indicates that the currency symbol should prefix the amount.
+symbol | string | The symbol of the currency.
+
+
+## Get the user profile
+
+Returns the user profile.
+
+`GET /user/profile`
+
+> Response Example
+
+```json
+{
+  "currency": "SEK",
+  "locale": "sv_SE",
+  "market": "SE",
+  "notificationSettings": {
+    "balance": false,
+    "budget": false,
+    "doubleCharge": false,
+    "income": false,
+    "largeExpense": false,
+    "summaryMonthly": false,
+    "summaryWeekly": false,
+    "transaction": false,
+    "unusualAccount": false,
+    "unusualCategory": false
+  },
+  "periodAdjustedDay": 25,
+  "periodMode": "MONTHLY_ADJUSTED",
+  "timeZone": "Europe/Stockholm"
+}
+```
+
+
+### Response: UserProfile
+
+Parameter | Type | Description
+--------- | ---- | -----------
+currency | string | The configured ISO 4217 currency code of the user. This can be modified by the user.
+locale | string | The configured locale of the user. This can be modified by the user.
+market | string | The primary market/country of the user.
+notificationSettings | NotificationSettings | The configured notification settings of the user. This can be modified by the user.
+periodAdjustedDay | integer | The configured day of the month to break the adjusted period on. This can be modified by the user.
+periodMode | string | The configured monthly period mode of the user. This can be modified by the user.. Values: <code style="white-space: nowrap;">MONTHLY</code>, <code style="white-space: nowrap;">MONTHLY_ADJUSTED</code>
+timeZone | string | The configured time zone of the user. This can be modified by the user.
+
+
+#### NotificationSettings
+
+Parameter | Type | Description
+--------- | ---- | -----------
+balance | boolean | Indicates if the user wants to receive notifications with low or high balances alerts.
+budget | boolean | Indicates if the user wants to receive notifications regarding her budgets.
+doubleCharge | boolean | Indicates if the user wants to receive notifications with double-charge alerts.
+income | boolean | Indicates if the user wants to receive notifications when an income is received.
+largeExpense | boolean | Indicates if the user wants to receive notifications when a large expense is detected.
+summaryMonthly | boolean | Indicates if the user wants to receive notifications with monthly summaries.
+summaryWeekly | boolean | Indicates if the user wants to receive notifications with weekly summaries.
+transaction | boolean | Indicates if the user wants to receive notifications for every transaction.
+unusualAccount | boolean | Indicates if the user wants to receive notifications when there is unusual activity on any of her accounts.
+unusualCategory | boolean | Indicates if the user wants to receive notifications when she has spend more than usual on something.
+
+
+## Update the user profile
+
+Updates certain user modifiable properties of a user's profile. Please refer to the body schema to see which properties are modifiable by the user.
+
+`PUT /user/profile`
+
+> Request Example
+
+```json
+{
+  "currency": "SEK",
+  "locale": "sv_SE",
+  "market": "SE",
+  "notificationSettings": {
+    "balance": false,
+    "budget": false,
+    "doubleCharge": false,
+    "income": false,
+    "largeExpense": false,
+    "summaryMonthly": false,
+    "summaryWeekly": false,
+    "transaction": false,
+    "unusualAccount": false,
+    "unusualCategory": false
+  },
+  "periodAdjustedDay": 25,
+  "periodMode": "MONTHLY_ADJUSTED",
+  "timeZone": "Europe/Stockholm"
+}
+```
+
+
+### Body: UserProfile
+
+The updated user profile object
+
+Parameter | Type | Description
+--------- | ---- | -----------
+currency | string | The configured ISO 4217 currency code of the user. This can be modified by the user.
+locale | string | The configured locale of the user. This can be modified by the user.
+market | string | The primary market/country of the user.
+notificationSettings | NotificationSettings | The configured notification settings of the user. This can be modified by the user.
+periodAdjustedDay | integer | The configured day of the month to break the adjusted period on. This can be modified by the user.
+periodMode | string | The configured monthly period mode of the user. This can be modified by the user.. Values: <code style="white-space: nowrap;">MONTHLY</code>, <code style="white-space: nowrap;">MONTHLY_ADJUSTED</code>
+timeZone | string | The configured time zone of the user. This can be modified by the user.
+
+
+#### NotificationSettings
+
+Parameter | Type | Description
+--------- | ---- | -----------
+balance | boolean | Indicates if the user wants to receive notifications with low or high balances alerts.
+budget | boolean | Indicates if the user wants to receive notifications regarding her budgets.
+doubleCharge | boolean | Indicates if the user wants to receive notifications with double-charge alerts.
+income | boolean | Indicates if the user wants to receive notifications when an income is received.
+largeExpense | boolean | Indicates if the user wants to receive notifications when a large expense is detected.
+summaryMonthly | boolean | Indicates if the user wants to receive notifications with monthly summaries.
+summaryWeekly | boolean | Indicates if the user wants to receive notifications with weekly summaries.
+transaction | boolean | Indicates if the user wants to receive notifications for every transaction.
+unusualAccount | boolean | Indicates if the user wants to receive notifications when there is unusual activity on any of her accounts.
+unusualCategory | boolean | Indicates if the user wants to receive notifications when she has spend more than usual on something.
+
+
+> Response Example
+
+```json
+{
+  "currency": "SEK",
+  "locale": "sv_SE",
+  "market": "SE",
+  "notificationSettings": {
+    "balance": false,
+    "budget": false,
+    "doubleCharge": false,
+    "income": false,
+    "largeExpense": false,
+    "summaryMonthly": false,
+    "summaryWeekly": false,
+    "transaction": false,
+    "unusualAccount": false,
+    "unusualCategory": false
+  },
+  "periodAdjustedDay": 25,
+  "periodMode": "MONTHLY_ADJUSTED",
+  "timeZone": "Europe/Stockholm"
+}
+```
+
+
+### Response: UserProfile
+
+Parameter | Type | Description
+--------- | ---- | -----------
+currency | string | The configured ISO 4217 currency code of the user. This can be modified by the user.
+locale | string | The configured locale of the user. This can be modified by the user.
+market | string | The primary market/country of the user.
+notificationSettings | NotificationSettings | The configured notification settings of the user. This can be modified by the user.
+periodAdjustedDay | integer | The configured day of the month to break the adjusted period on. This can be modified by the user.
+periodMode | string | The configured monthly period mode of the user. This can be modified by the user.. Values: <code style="white-space: nowrap;">MONTHLY</code>, <code style="white-space: nowrap;">MONTHLY_ADJUSTED</code>
+timeZone | string | The configured time zone of the user. This can be modified by the user.
+
+
+#### NotificationSettings
+
+Parameter | Type | Description
+--------- | ---- | -----------
+balance | boolean | Indicates if the user wants to receive notifications with low or high balances alerts.
+budget | boolean | Indicates if the user wants to receive notifications regarding her budgets.
+doubleCharge | boolean | Indicates if the user wants to receive notifications with double-charge alerts.
+income | boolean | Indicates if the user wants to receive notifications when an income is received.
+largeExpense | boolean | Indicates if the user wants to receive notifications when a large expense is detected.
+summaryMonthly | boolean | Indicates if the user wants to receive notifications with monthly summaries.
+summaryWeekly | boolean | Indicates if the user wants to receive notifications with weekly summaries.
+transaction | boolean | Indicates if the user wants to receive notifications for every transaction.
+unusualAccount | boolean | Indicates if the user wants to receive notifications when there is unusual activity on any of her accounts.
+unusualCategory | boolean | Indicates if the user wants to receive notifications when she has spend more than usual on something.
 
 

@@ -183,11 +183,11 @@ class TagConverter:
             s += tag['description'] + '\n\n'
 
         paths = []
-        for path in self.operations:
+        for path in sorted(self.operations):
             def find(path):
-                for method in self.operations[path]:
+                for method in sorted(self.operations[path]):
                     if tag['name'] in self.operations[path][method]['tags']:
-                        paths.append(path);
+                        paths.append(path)
                         return
             find(path)
 
