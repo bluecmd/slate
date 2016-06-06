@@ -1,3 +1,10 @@
+Tink
+------------
+Run `init.sh` after initial clone.
+Then run `build.sh [serve]` for building. Optional parameter `serve` fires up a web server on `localhost:4567`
+
+
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/lord/img/master/logo-slate.png" alt="Slate: API Documentation Generator" width="226">
   <br>
