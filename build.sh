@@ -13,6 +13,7 @@ MODULE=main-api
 TEMPLATE=source/index.html.md.main-api.template
 if [ $# -eq 1 ] && [ $1 != "serve" ]; then
 	MODULE=$1
+	TEMPLATE=source/index.html.md.$1.template
 elif [ $# -eq 2 ]; then
 	MODULE=$2
 	TEMPLATE=source/index.html.md.$2.template
@@ -32,7 +33,7 @@ cd $CURRENT_PATH
 echo "\n./swagger2markdown.py -s swagger.json -o source/index.html.md -t $TEMPLATE"
 ./swagger2markdown.py -s swagger.json -o source/index.html.md -t $TEMPLATE
 
-if [ $SERVE ]; then
+if $SERVE ; then
     echo "\nbundle exec middleman server"
 	bundle exec middleman server
 else
