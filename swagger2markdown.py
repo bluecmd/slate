@@ -12,10 +12,25 @@ parser.add_argument("-o", "--output", help="The output markdown file", required=
 
 args = parser.parse_args()
 
-def findDefintion(ref, definitions): 
+def findDefintion(ref, definitions):
     for definition in definitions:
         if ref.endswith('/'+definition):
             return (definition, definitions[definition])
+
+def findAllDefintions(ref, definitions, result, addSelf=False):
+    definition = findDefintion(ref, definitions)
+    if addSelf:
+        result.append(definition)
+
+    #find sub definitions
+    if 'properties' in definition[1]:
+        for prop in definition[1]['properties']:
+            property = definition[1]['properties'][prop]
+            if '$ref' in property:
+                findAllDefintions(property['$ref'], definitions, result, True)
+            elif 'items' in property and '$ref' in property['items']:
+                findAllDefintions(property['items']['$ref'], definitions, result, True)
+
 
 def findParametersOfType(parameterType, parameters): 
     params = []
@@ -202,7 +217,11 @@ class OperationConverter:
             modelConverter = ModelConverter(self.definitions)
 
             response = None
+            responseRef = None
+
             requestBody = None
+            requestBodyRef = None
+
             queryParam = []
             pathParam = []
 
@@ -211,9 +230,11 @@ class OperationConverter:
                 if '200' in responses:
                     if 'schema' in responses['200']:
                         if '$ref' in responses['200']['schema']:
-                            response = findDefintion(responses['200']['schema']['$ref'], self.definitions)
+                            responseRef = responses['200']['schema']['$ref']
+                            response = findDefintion(responseRef, self.definitions)
                         else:
-                            response = findDefintion(responses['200']['schema']['items']['$ref'], self.definitions)
+                            responseRef = responses['200']['schema']['items']['$ref']
+                            response = findDefintion(responseRef, self.definitions)
 
             if 'parameters' in self.operation[method]:
                 queryParam = findParametersOfType('query', self.operation[method]['parameters'])
@@ -223,9 +244,11 @@ class OperationConverter:
                     requestBody = body[0]
 
                     if '$ref' in requestBody['schema']:
-                        (bodyName,bodyModel) = findDefintion(requestBody['schema']['$ref'], self.definitions)
+                        requestBodyRef = requestBody['schema']['$ref']
+                        (bodyName,bodyModel) = findDefintion(requestBodyRef, self.definitions)
                     else:
-                        (bodyName,bodyModel) = findDefintion(requestBody['schema']['items']['$ref'], self.definitions)
+                        requestBodyRef = requestBody['schema']['items']['$ref']
+                        (bodyName,bodyModel) = findDefintion(requestBodyRef, self.definitions)
 
 
 
@@ -250,6 +273,14 @@ class OperationConverter:
                 s += requestBody['description'] + '\n\n'
                 s += modelConverter.toTable(bodyModel) + '\n\n'
 
+                #Sub models
+                result = []
+                findAllDefintions(requestBodyRef, self.definitions, result)
+                for subType in result:
+                    s += '#### ' + subType[0] + '\n\n'
+                    s += modelConverter.toTable(subType[1]) + '\n\n'
+
+
             # Right pane: Response example
             if response is not None:
                 s += modelConverter.toExampleJson('Response Example', response[1]) + '\n\n'
@@ -258,6 +289,13 @@ class OperationConverter:
             if response is not None:
                 s += '### Response: ' + response[0] + '\n\n'
                 s += modelConverter.toTable(response[1]) + '\n\n'
+
+                #Sub models
+                result = []
+                findAllDefintions(responseRef, self.definitions, result)
+                for subType in result:
+                    s += '#### ' + subType[0] + '\n\n'
+                    s += modelConverter.toTable(subType[1]) + '\n\n'
 
         return s
 
