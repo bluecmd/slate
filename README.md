@@ -9,7 +9,7 @@ $ ./init.sh
 To build run: 
 
 ```
-$ build.sh [serve]
+$ ./build.sh [serve]
 ```
 
 The optional parameter `serve` fires up a web server on `localhost:4567`
