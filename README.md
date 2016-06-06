@@ -1,8 +1,18 @@
 Tink
 ------------
-Run `init.sh` after initial clone.
-Then run `build.sh [serve]` for building. Optional parameter `serve` fires up a web server on `localhost:4567`
+After initial clone, run:
 
+```
+$ ./init.sh
+```
+
+To build run: 
+
+```
+$ build.sh [serve]
+```
+
+The optional parameter `serve` fires up a web server on `localhost:4567`
 
 
 <p align="center">
