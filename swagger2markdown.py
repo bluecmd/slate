@@ -24,7 +24,7 @@ def findAllDefintions(ref, definitions, result, addSelf=False):
 
     #find sub definitions
     if 'properties' in definition[1]:
-        for prop in definition[1]['properties']:
+        for prop in sorted(definition[1]['properties']):
             property = definition[1]['properties'][prop]
             if '$ref' in property:
                 findAllDefintions(property['$ref'], definitions, result, True)
