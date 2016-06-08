@@ -26,3 +26,4 @@ doc/
 # Tink
 config.sh
 source/index.html.md
+swagger.json
