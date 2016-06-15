@@ -6,6 +6,12 @@ After initial clone, run:
 $ ./init.sh
 ```
 
+Copy `config.sh.template` to `config.sh` and make it your own by setting variable TINK_BACKEND to your path
+```
+$ cp config.sh.template config.sh
+$ vim|emacs|nano|subl config.sh
+```
+
 To build run: 
 
 ```
