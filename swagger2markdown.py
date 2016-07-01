@@ -139,8 +139,9 @@ class ModelConverter:
         return s
 
     def toTable(self, model):
-        s =  'Parameter | Type | Description\n'
-        s += '--------- | ---- | -----------\n'
+
+        s =  'Parameter | Type | Required | Description\n'
+        s += '--------- | ---- | -------- | -----------\n'
         for prop in sorted(model['properties']):
 
             t = ''
@@ -156,6 +157,10 @@ class ModelConverter:
                 (name,m) = findDefintion(model['properties'][prop]['$ref'], self.definitions)
                 t += name
 
+            req = ''
+            if 'required' in model and prop in model['required'] :
+                req = 'true'
+
             d = ''
             if 'description' in model['properties'][prop]:
                 d = model['properties'][prop]['description']
@@ -168,7 +173,7 @@ class ModelConverter:
                         if i < len(model['properties'][prop]['enum']):
                             d += ', '
 
-            s += prop + ' | ' + t + ' | ' + d + '\n' 
+            s += prop + ' | ' + t + ' | ' + req + ' | ' + d + '\n'
 
         return s
 
