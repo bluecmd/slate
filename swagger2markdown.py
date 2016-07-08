@@ -58,7 +58,13 @@ def exampleValue(type):
         'datetime': 1465032304000
     }.get(type, '') 
 
-def exampleStringToValue(type, value):
+def exampleStringToValue(prop):
+
+    type = prop['type']
+    value = prop['example']
+    format = None
+    if ('format' in prop):
+        format = prop['format']
 
     if type == 'double':
         return float(value)
@@ -81,11 +87,14 @@ def exampleStringToValue(type, value):
             'False': False
         }.get(value)
 
+    if type == 'string' and format == 'date-time':
+        return int(value)
+
     return value
 
 def ordinaryPropertyToValue(prop):
     if 'example' in prop:
-        return exampleStringToValue(prop['type'], prop['example'])
+        return exampleStringToValue(prop)
     else:
         return exampleValue(prop['type'])
 
