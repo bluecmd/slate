@@ -92,6 +92,12 @@ def exampleStringToValue(prop):
 
     return value
 
+def ordinaryPropertyToType(prop):
+    if 'format' in prop and prop['format'] == 'date-time':
+        return 'number'
+    else:
+        return prop['type']
+
 def ordinaryPropertyToValue(prop):
     if 'example' in prop:
         return exampleStringToValue(prop)
@@ -153,16 +159,21 @@ class ModelConverter:
         s += '--------- | ---- | -------- | -----------\n'
         for prop in sorted(model['properties']):
 
+            # building up the type
             t = ''
             if 'type' in model['properties'][prop]:
-                t = model['properties'][prop]['type']
+                # string,double,array,...
+                t = ordinaryPropertyToType(model['properties'][prop])
 
             if 'items' in model['properties'][prop] and 'type' in model['properties'][prop]['items'] and len(t) > 0:
+                # array[string|double|...]
                 t += '[' + model['properties'][prop]['items']['type'] + ']'
             elif 'items' in model['properties'][prop] and '$ref' in model['properties'][prop]['items'] and len(t) > 0:
+                # array[class]
                 (name,m) = findDefintion(model['properties'][prop]['items']['$ref'], self.definitions)
                 t += '[' + name + ']'
             elif '$ref' in model['properties'][prop]:
+                # only class
                 (name,m) = findDefintion(model['properties'][prop]['$ref'], self.definitions)
                 t += name
 
