@@ -26,9 +26,9 @@ def findAllDefintions(ref, definitions, result, addSelf=False):
     if 'properties' in definition[1]:
         for prop in sorted(definition[1]['properties']):
             property = definition[1]['properties'][prop]
-            if '$ref' in property:
+            if '$ref' in property and ref != property['$ref']:
                 findAllDefintions(property['$ref'], definitions, result, True)
-            elif 'items' in property and '$ref' in property['items']:
+            elif 'items' in property and '$ref' in property['items'] and ref != property['items']['$ref']:
                 findAllDefintions(property['items']['$ref'], definitions, result, True)
 
 
@@ -89,6 +89,9 @@ def exampleStringToValue(prop):
 
     if type == 'string' and format == 'date-time':
         return int(value)
+        
+    if type == 'string' and value == 'null':
+        return None
 
     return value
 
@@ -110,15 +113,15 @@ def splitIntoArray(str):
     return str.split(',')
 
 
-def modelToJsonExampleDict(d, model, definitions):
+def modelToJsonExampleDict(d, name, model, definitions):
 
     for prop in model['properties']:
 
         if 'type' in model['properties'][prop] and model['properties'][prop]['type'] == 'array':
             if '$ref' in model['properties'][prop]['items']:
                 (bodyName,bodyModel) = findDefintion(model['properties'][prop]['items']['$ref'], definitions)
-                d[prop] = [ modelToJsonExampleDict({}, bodyModel, definitions) ]
-            
+                if bodyName != name:
+                    d[prop] = [ modelToJsonExampleDict({}, bodyName, bodyModel, definitions) ]
             elif 'example' in model['properties'][prop]:
                 try:
                     d[prop] = json.loads(model['properties'][prop]['example'])
@@ -132,8 +135,9 @@ def modelToJsonExampleDict(d, model, definitions):
         elif '$ref' not in model['properties'][prop]:
                 d[prop] = ordinaryPropertyToValue(model['properties'][prop])
         elif '$ref' in model['properties'][prop]:
+
             (bodyName,bodyModel) = findDefintion(model['properties'][prop]['$ref'], definitions)
-            d[prop] = modelToJsonExampleDict({}, bodyModel, definitions)
+            d[prop] = modelToJsonExampleDict({}, bodyName, bodyModel, definitions)
 
     return d
 
@@ -143,8 +147,8 @@ class ModelConverter:
     def __init__(self, definitions):
         self.definitions = definitions
 
-    def toExampleJson(self, title, model):
-        d = modelToJsonExampleDict({}, model, self.definitions)
+    def toExampleJson(self, title, name, model):
+        d = modelToJsonExampleDict({}, name, model, self.definitions)
 
         s = '> ' + title +'\n\n'
         s += '```json\n'
@@ -280,7 +284,7 @@ class OperationConverter:
 
             # Right pane: Request example
             if requestBody is not None:
-                s += modelConverter.toExampleJson('Request Example', bodyModel) + '\n\n'
+                s += modelConverter.toExampleJson('Request Example', bodyName, bodyModel) + '\n\n'
 
             # Center pane: Path Parameters
             if len(pathParam) > 0 :
@@ -308,7 +312,7 @@ class OperationConverter:
 
             # Right pane: Response example
             if response is not None:
-                s += modelConverter.toExampleJson('Response Example', response[1]) + '\n\n'
+                s += modelConverter.toExampleJson('Response Example', response[0], response[1]) + '\n\n'
 
             # Center pane: Response Body
             if response is not None:
