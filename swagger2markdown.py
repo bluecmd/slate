@@ -262,7 +262,7 @@ class OperationConverter:
                         if '$ref' in responses['200']['schema']:
                             responseRef = responses['200']['schema']['$ref']
                             response = findDefintion(responseRef, self.definitions)
-                        else:
+                        elif '$ref' in responses['200']['schema']['items']:
                             responseRef = responses['200']['schema']['items']['$ref']
                             response = findDefintion(responseRef, self.definitions)
 
