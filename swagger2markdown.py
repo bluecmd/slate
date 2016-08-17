@@ -41,10 +41,10 @@ def findParametersOfType(parameterType, parameters):
     return params
 
 def parametersToTable(parameters):
-    s =  'Parameter | Description\n'
-    s += '--------- | -----------\n'
+    s =  'Parameter | Description | Required\n'
+    s += '--------- | ----------- | --------\n'
     for param in parameters:
-        s += param['name'] + ' | ' + (param['description'] if 'description' in param else '') + '\n'
+        s += param['name'] + ' | ' + (param['description'] if 'description' in param else '') + ' | ' + ('true' if 'required' in param else '') + '\n'
     return s
 
 def exampleValue(type):
@@ -253,6 +253,7 @@ class OperationConverter:
 
             queryParam = []
             pathParam = []
+            headerParam = []
 
             if 'responses' in self.operation[method]:
                 responses = self.operation[method]['responses']
@@ -268,6 +269,8 @@ class OperationConverter:
             if 'parameters' in self.operation[method]:
                 queryParam = findParametersOfType('query', self.operation[method]['parameters'])
                 pathParam = findParametersOfType('path', self.operation[method]['parameters'])
+                headerParam = findParametersOfType('header', self.operation[method]['parameters'])
+
                 body = findParametersOfType('body', self.operation[method]['parameters'])
                 if len(body) > 0:
                     requestBody = body[0]
@@ -290,6 +293,11 @@ class OperationConverter:
             if len(pathParam) > 0 :
                 s += '### Parameters' + '\n\n'
                 s += parametersToTable(pathParam) + '\n\n'
+
+            # Center pane: Query Parameters
+            if len(headerParam) > 0:
+                s += '### Header Parameters' + '\n\n'
+                s += parametersToTable(headerParam) + '\n\n'
 
             # Center pane: Query Parameters
             if len(queryParam) > 0:
