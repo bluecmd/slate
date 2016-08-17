@@ -16,6 +16,7 @@ includes:
   - main-transaction
   - main-statistics
   - main-activity
+  - main-transfers
   - start-reference
 
 search: true
