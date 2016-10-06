@@ -16,6 +16,6 @@ Tink <code>Account</code>   | a4692fae219d4f7892262f269a6002f6 | tink://{account
 Destination type | Defined by | URI format | Example
 -------------- | ------ | ---------- | --------
 Bank Account   | 9999 - 123456789 | se://{clearingnumber}{accountnumber} | se://9999123456789
-PG Recipient   | 90 2003-3 | se_pg://{pg-recipient} | se_pg://9020033
-BG Recipient   | 902-0033 | se_bg://{bg-recipient} | se_bg://9020033
+PG Recipient   | 90 2003-3 | se-pg://{pg-recipient} | se-pg://9020033
+BG Recipient   | 902-0033 | se-bg://{bg-recipient} | se-bg://9020033
 
