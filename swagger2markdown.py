@@ -12,7 +12,7 @@ parser.add_argument("-o", "--output", help="The output markdown file", required=
 
 args = parser.parse_args()
 
-def findDefintion(ref, definitions):
+def findDefintion(ref, definitions, type=None):
     for definition in definitions:
         if ref.endswith('/'+definition):
             return (definition, definitions[definition])
@@ -133,9 +133,8 @@ def modelToJsonExampleDict(d, name, model, definitions):
             else:
                 d[prop] = []
         elif '$ref' not in model['properties'][prop]:
-                d[prop] = ordinaryPropertyToValue(model['properties'][prop])
+            d[prop] = ordinaryPropertyToValue(model['properties'][prop])
         elif '$ref' in model['properties'][prop]:
-
             (bodyName,bodyModel) = findDefintion(model['properties'][prop]['$ref'], definitions)
             d[prop] = modelToJsonExampleDict({}, bodyName, bodyModel, definitions)
 
@@ -147,12 +146,18 @@ class ModelConverter:
     def __init__(self, definitions):
         self.definitions = definitions
 
-    def toExampleJson(self, title, name, model):
+    def toExampleJson(self, title, name, model, type = 'object'):
         d = modelToJsonExampleDict({}, name, model, self.definitions)
+
+        jsonObj = [];
+        if type == 'array':
+            jsonObj.append(d)
+        else:
+            jsonObj = d
 
         s = '> ' + title +'\n\n'
         s += '```json\n'
-        s += json.dumps(d, sort_keys=True, indent=2) + '\n'
+        s += json.dumps(jsonObj, sort_keys=True, indent=2) + '\n'
         s += '```\n'
         
         return s
@@ -247,6 +252,7 @@ class OperationConverter:
 
             response = None
             responseRef = None
+            responseType = None
 
             requestBody = None
             requestBodyRef = None
@@ -262,9 +268,11 @@ class OperationConverter:
                         if '$ref' in responses['200']['schema']:
                             responseRef = responses['200']['schema']['$ref']
                             response = findDefintion(responseRef, self.definitions)
+                            responseType = 'object'
                         elif '$ref' in responses['200']['schema']['items']:
                             responseRef = responses['200']['schema']['items']['$ref']
                             response = findDefintion(responseRef, self.definitions)
+                            responseType = responses['200']['schema']['type']
 
             if 'parameters' in self.operation[method]:
                 queryParam = findParametersOfType('query', self.operation[method]['parameters'])
@@ -320,11 +328,14 @@ class OperationConverter:
 
             # Right pane: Response example
             if response is not None:
-                s += modelConverter.toExampleJson('Response Example', response[0], response[1]) + '\n\n'
+                s += modelConverter.toExampleJson('Response Example', response[0], response[1], responseType) + '\n\n'
 
             # Center pane: Response Body
             if response is not None:
-                s += '### Response: ' + response[0] + '\n\n'
+                if responseType == 'array':
+                    s += '### Response: ' + responseType + '[' + response[0] + ']' + '\n\n'
+                else :
+                    s += '### Response: ' + response[0] + '\n\n'
                 s += modelConverter.toTable(response[1]) + '\n\n'
 
                 #Sub models
