@@ -6,6 +6,8 @@ After initial clone, run:
 $ ./init.sh
 ```
 
+If  you don't have bundler run: `gem install bundler`.
+
 Copy `config.sh.template` to `config.sh` and make it your own by setting variable TINK_BACKEND to your path
 ```
 $ cp config.sh.template config.sh
