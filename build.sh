@@ -9,8 +9,9 @@ if [ $# -gt 0 ] && [ $1 = "serve" ]; then
 	SERVE=true
 fi
 
-MODULE=main-api
-TEMPLATE=source/index.html.md.main-api.template
+MODULE=main
+TEMPLATE=source/index.html.md.main.template
+
 if [ $# -eq 1 ] && [ $1 != "serve" ]; then
 	MODULE=$1
 	TEMPLATE=source/index.html.md.$1.template
@@ -21,11 +22,11 @@ fi
 
 echo "\ncd $TINK_BACKEND"
 cd $TINK_BACKEND
-echo "\nmvn -pl src/main-api,src/connector-api compile -DskipTests=true"
-mvn -pl src/main-api,src/connector-api compile -DskipTests=true
+echo "\nmvn -pl src/$MODULE-service -am compile -DskipTests=true"
+mvn -pl src/$MODULE-service -am compile -DskipTests=true
 
-echo "\ncp src/$MODULE/target/generated/swagger/swagger.json $CURRENT_PATH/"
-cp src/$MODULE/target/generated/swagger/swagger.json $CURRENT_PATH/
+echo "\ncp src/$MODULE-service/target/generated/swagger/swagger.json $CURRENT_PATH/"
+cp src/$MODULE-service/target/generated/swagger/swagger.json $CURRENT_PATH/
 
 echo "\ncd $CURRENT_PATH"
 cd $CURRENT_PATH
