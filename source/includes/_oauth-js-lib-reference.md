@@ -68,7 +68,7 @@ Status | Description
 ------ | -----------
 BAD_REQUEST | When link or OAuth2Client was initiated/configured badly
 SERVICE_UNAVAILABLE | When Tink is completely unavailable
-TEMPORARY_ERROR | Unexpected error
+TEMPORARY_ERROR | Unexpected error that is retryable. Could happen on browser reload or if end-user looses Internet connection.
 TEMPORARY_DISABLED | The chosen provider in temporarily disabled. Probably due to the provider being down.
 AUTHENTICATION_ERROR | When an error occured due to authentication of the end-user. Can either be temporary or triggered by user (i.e. cancelling authentication). Further information will be given by the `status` and `statusPayload` of the `Credentials` object found in the `data` parameter.
 SIGN_ERROR | When an error occured when signing a SignableOperation. Can either be temporary or triggered by user (i.e. cancelling signing). Further information will be given by the `status` and `statusMessage` of the `SignableOperation` object found in the `data` parameter.
