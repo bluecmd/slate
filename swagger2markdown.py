@@ -242,6 +242,9 @@ class OperationConverter:
 
         s = ''
         for method in sorted(self.operation):
+            if 'summary' not in self.operation[method]:
+                print('Ignoring ', self.operation)
+                continue
             s += '## ' + self.operation[method]['summary'] + '\n\n'
             if 'description' in self.operation[method]:
                 s += self.operation[method]['description'] + '\n\n'
